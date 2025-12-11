@@ -5,22 +5,14 @@ import { AnswerCard } from '../../../application/answerCard.js';
 import { InMemoryCardRepository } from '../../repositories/inMemoryCardRepository.js';
 
 const router = express.Router();
-const cardRepository = new InMemoryCardRepository(); // Singleton-ish for now (in real app, use DI)
+const cardRepository = new InMemoryCardRepository();
 
-// Hack to keep state across requests since we re-instantiate repo otherwise
-// Actually, for in-memory to work across requests, we need a singleton instance exported or passed around.
-// Let's create a singleton instance in a separate file or just attach it to app.
-// For now, let's just export the instance from the repo file or create it here outside the route handler?
-// No, module caching will handle it if we export an instance, but we exported the class.
-// Let's create a singleton instance here for simplicity, but wait, if I import this router in server.js, this code runs once.
-// So `const cardRepository = new InMemoryCardRepository();` is fine as long as server stays alive.
-// BUT for tests, we might want a fresh one.
-// Let's stick to this for now.
 
 router.get('/', async (req, res) => {
     try {
         const tags = req.query.tags ? req.query.tags.split(',') : [];
-        const cards = await cardRepository.findByTags(tags);
+        const userId = req.headers['x-user-id'] || 'anonymous';
+        const cards = await cardRepository.findByTags(userId, tags);
         res.json(cards);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -30,7 +22,8 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const useCase = new CreateCard(cardRepository);
-        const card = await useCase.execute(req.body);
+        const userId = req.headers['x-user-id'] || 'anonymous';
+        const card = await useCase.execute(req.body, userId);
         res.status(201).json(card);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -40,8 +33,9 @@ router.post('/', async (req, res) => {
 router.get('/quizz', async (req, res) => {
     try {
         const date = req.query.date;
+        const userId = req.headers['x-user-id'] || 'anonymous';
         const useCase = new GetQuizz(cardRepository);
-        const cards = await useCase.execute(date);
+        const cards = await useCase.execute(userId, date);
         res.json(cards);
     } catch (error) {
         res.status(500).json({ error: error.message });

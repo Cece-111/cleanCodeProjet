@@ -11,20 +11,20 @@ export class InMemoryCardRepository extends CardRepository {
         return card;
     }
 
-    async findAll() {
-        return Array.from(this.cards.values());
+    async findAll(userId) {
+        return Array.from(this.cards.values()).filter(card => card.userId === userId);
     }
 
     async findById(id) {
         return this.cards.get(id) || null;
     }
 
-    async findByTags(tags) {
+    async findByTags(userId, tags) {
         if (!tags || tags.length === 0) {
-            return this.findAll();
+            return this.findAll(userId);
         }
         return Array.from(this.cards.values()).filter(card => 
-            tags.includes(card.tag)
+            card.userId === userId && tags.includes(card.tag)
         );
     }
 }

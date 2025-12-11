@@ -15,31 +15,34 @@ describe('Application Use Cases', () => {
     test('CreateCard should save a new card', async () => {
         const useCase = new CreateCard(repo);
         const cardData = { question: 'Q', answer: 'A', tag: 'T' };
-        const card = await useCase.execute(cardData);
+        const card = await useCase.execute(cardData, 'user1');
         
         expect(card.id).toBeDefined();
         expect(card.question).toBe('Q');
+        expect(card.userId).toBe('user1');
         
         const stored = await repo.findById(card.id);
         expect(stored).toEqual(card);
     });
 
     test('GetQuizz should return due cards', async () => {
-        const c1 = new Card({ question: 'Q1', answer: 'A1', tag: 'T1' }); // Due (new)
-        const c2 = new Card({ question: 'Q2', answer: 'A2', tag: 'T2', lastAnsweredDate: new Date() }); // Not due (answered today, cat 1 -> next due tomorrow)
+        const c1 = new Card({ question: 'Q1', answer: 'A1', tag: 'T1', userId: 'user1' }); // Due (new)
+        const c2 = new Card({ question: 'Q2', answer: 'A2', tag: 'T2', lastAnsweredDate: new Date(), userId: 'user1' }); // Not due
+        const c3 = new Card({ question: 'Q3', answer: 'A3', tag: 'T3', userId: 'user2' }); // Other user
         
         await repo.save(c1);
         await repo.save(c2);
+        await repo.save(c3);
 
         const useCase = new GetQuizz(repo);
-        const quizz = await useCase.execute();
+        const quizz = await useCase.execute('user1');
         
         expect(quizz.length).toBe(1);
         expect(quizz[0].id).toBe(c1.id);
     });
 
     test('AnswerCard should update card category', async () => {
-        const card = new Card({ question: 'Q', answer: 'A', tag: 'T' });
+        const card = new Card({ question: 'Q', answer: 'A', tag: 'T', userId: 'user1' });
         await repo.save(card);
 
         const useCase = new AnswerCard(repo);

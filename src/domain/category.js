@@ -23,6 +23,6 @@ export const getNextCategory = (currentCategory) => {
     const categories = Object.values(Category);
     const index = categories.indexOf(currentCategory);
     if (index === -1 || currentCategory === Category.DONE) return Category.DONE;
-    if (index === categories.length - 2) return Category.DONE; // After SEVENTH comes DONE
+    if (index === categories.length - 2) return Category.DONE;
     return categories[index + 1];
 };

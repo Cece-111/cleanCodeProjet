@@ -5,8 +5,8 @@ export class CreateCard {
         this.cardRepository = cardRepository;
     }
 
-    async execute(cardData) {
-        const card = new Card(cardData);
+    async execute(cardData, userId) {
+        const card = new Card({ ...cardData, userId });
         return await this.cardRepository.save(card);
     }
 }

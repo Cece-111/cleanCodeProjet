@@ -3,33 +3,34 @@ import { Category } from '../../src/domain/category.js';
 
 describe('Card Domain Entity', () => {
     test('should create a card with default values', () => {
-        const card = new Card({ question: 'Q', answer: 'A', tag: 'T' });
+        const card = new Card({ question: 'Q', answer: 'A', tag: 'T', userId: 'user1' });
         expect(card.id).toBeDefined();
         expect(card.category).toBe(Category.FIRST);
         expect(card.lastAnsweredDate).toBeNull();
+        expect(card.userId).toBe('user1');
     });
 
     test('should promote card to next category on correct answer', () => {
-        const card = new Card({ question: 'Q', answer: 'A', tag: 'T' });
+        const card = new Card({ question: 'Q', answer: 'A', tag: 'T', userId: 'user1' });
         card.answerCard(true);
         expect(card.category).toBe(Category.SECOND);
         expect(card.lastAnsweredDate).not.toBeNull();
     });
 
     test('should reset card to FIRST category on wrong answer', () => {
-        const card = new Card({ question: 'Q', answer: 'A', tag: 'T', category: Category.THIRD });
+        const card = new Card({ question: 'Q', answer: 'A', tag: 'T', category: Category.THIRD, userId: 'user1' });
         card.answerCard(false);
         expect(card.category).toBe(Category.FIRST);
     });
 
     test('should remove card from system (DONE) after SEVENTH category', () => {
-        const card = new Card({ question: 'Q', answer: 'A', tag: 'T', category: Category.SEVENTH });
+        const card = new Card({ question: 'Q', answer: 'A', tag: 'T', category: Category.SEVENTH, userId: 'user1' });
         card.answerCard(true);
         expect(card.category).toBe(Category.DONE);
     });
 
     test('should determine if card is due for review', () => {
-        const card = new Card({ question: 'Q', answer: 'A', tag: 'T' });
+        const card = new Card({ question: 'Q', answer: 'A', tag: 'T', userId: 'user1' });
         
         // New card is always due (or maybe not? Logic says if no date, it's due)
         // My implementation: if (!this.lastAnsweredDate) return true;

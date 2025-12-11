@@ -3,8 +3,8 @@ export class GetQuizz {
         this.cardRepository = cardRepository;
     }
 
-    async execute(date) {
-        const cards = await this.cardRepository.findAll();
+    async execute(userId, date) {
+        const cards = await this.cardRepository.findAll(userId);
         const quizzDate = date ? new Date(date) : new Date();
         return cards.filter(card => card.isDue(quizzDate));
     }

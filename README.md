@@ -1,18 +1,18 @@
-# Leitner System API
+# API Système Leitner
 
-This project implements a Leitner System learning application backend using Node.js, Express, and Hexagonal Architecture.
+Ce projet implémente le backend d'une application d'apprentissage basée sur le système Leitner, utilisant Node.js, Express et l'Architecture Hexagonale.
 
 ## Architecture
 
-The project follows **Hexagonal Architecture (Ports & Adapters)** and **Domain-Driven Design (DDD)** principles.
+Le projet suit les principes de **l'Architecture Hexagonale (Ports & Adapters)** et du **Domain-Driven Design (DDD)**.
 
-- **Domain (`src/domain`)**: Contains the core business logic (Entities, Value Objects, Ports). It has NO dependencies on outer layers.
-- **Application (`src/application`)**: Contains Use Cases that orchestrate the domain logic.
-- **Infrastructure (`src/infrastructure`)**: Contains adapters for external concerns (Web API, Persistence).
+- **Domaine (`src/domain`)** : Contient la logique métier centrale (Entités, Objets de Valeur, Ports). Il n'a AUCUNE dépendance vers les couches extérieures.
+- **Application (`src/application`)** : Contient les Cas d'Utilisation qui orchestrent la logique du domaine.
+- **Infrastructure (`src/infrastructure`)** : Contient les adaptateurs pour les préoccupations externes (API Web, Persistance).
 
-## Prerequisites
+## Prérequis
 
-- Node.js (v14+ recommended)
+- Node.js
 - npm
 
 ## Installation
@@ -21,31 +21,31 @@ The project follows **Hexagonal Architecture (Ports & Adapters)** and **Domain-D
 npm install
 ```
 
-## Running the Server
+## Démarrer le Serveur
 
 ```bash
 npm start
 ```
 
-The server will start on `http://localhost:8080`.
+Le serveur démarrera sur `http://localhost:8080`.
 
-## Running Tests
+## Lancer les Tests
 
-To run all tests (Unit & Integration) with coverage:
+Pour lancer tous les tests (Unitaires & Intégration) avec la couverture :
 
 ```bash
 npm test -- --coverage
 ```
 
-## API Endpoints
+## Endpoints API
 
-- **GET /cards**: Get all cards (optional `tags` query param).
-- **POST /cards**: Create a new card.
-- **GET /cards/quizz**: Get cards due for review (optional `date` query param).
-- **PATCH /cards/:cardId/answer**: Submit an answer (`isValid`: boolean).
+- **GET /cards** : Récupérer toutes les cartes (paramètre de requête optionnel `tags`).
+- **POST /cards** : Créer une nouvelle carte.
+- **GET /cards/quizz** : Récupérer les cartes à réviser (paramètre de requête optionnel `date`).
+- **PATCH /cards/:cardId/answer** : Soumettre une réponse (`isValid`: booléen).
 
-## Design Choices
+## Choix de Conception
 
-- **Hexagonal Architecture**: To decouple business logic from the framework and database.
-- **In-Memory Repository**: Simulates a database for this exercise. Can be easily swapped with a real DB adapter.
-- **Value Objects**: `Category` handles the Leitner interval logic.
+- **Architecture Hexagonale** : Pour découpler la logique métier du framework et de la base de données.
+- **Repository en Mémoire** : Simule une base de données pour cet exercice. Peut être facilement remplacé par un adaptateur de base de données réelle.
+- **Objets de Valeur** : `Category` gère la logique des intervalles Leitner.
